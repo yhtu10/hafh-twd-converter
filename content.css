@@ -1,0 +1,14 @@
+.hafh-twd-badge {
+  display: inline-block;
+  background-color: #7149CE;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 6px;
+  cursor: default;
+  vertical-align: middle;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}

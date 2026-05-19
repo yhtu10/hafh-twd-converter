@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "HafH 台幣換算",
+  "version": "1.0",
+  "description": "在 HafH 網站自動顯示幣值換算後的台幣價格",
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.hafh.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

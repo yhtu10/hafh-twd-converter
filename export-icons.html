@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Export Icons</title>
+  <style>
+    body { font-family: sans-serif; padding: 32px; background: #1a1a2e; color: white; }
+    h2 { margin-bottom: 24px; }
+    .row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    canvas { border-radius: 6px; }
+    a {
+      background: #7149CE; color: white; padding: 8px 16px;
+      border-radius: 8px; text-decoration: none; font-size: 13px;
+    }
+    a:hover { background: #5e3ab5; }
+    .label { width: 60px; color: #aaa; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h2>HafH Icon Export</h2>
+  <div id="rows"></div>
+
+  <script>
+    const svgText = `<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .st0 { fill: #fcf8dd; }
+      .st1 { fill: #f0e179; }
+      .st2 { fill: #342d3e; fill-rule: evenodd; }
+      .st3 { fill: #7149ce; stroke: #342d3e; stroke-miterlimit: 10; stroke-width: .75px; }
+      .st4 { fill: #fff; }
+    </style>
+  </defs>
+  <circle class="st0" cx="10.42" cy="10.42" r="8.57"/>
+  <circle class="st1" cx="11.74" cy="11.74" r="7.28"/>
+  <path class="st2" d="M10.42,18.14c4.26,0,7.71-3.45,7.71-7.71s-3.45-7.71-7.71-7.71-7.71,3.45-7.71,7.71,3.45,7.71,7.71,7.71ZM10.42,19.85c5.2,0,9.42-4.22,9.42-9.42S15.63,1,10.42,1,1,5.22,1,10.42s4.22,9.42,9.42,9.42Z"/>
+  <path class="st2" d="M7.85,6.14c.47,0,.86.38.86.86v2.57h3.43v-2.57c0-.47.38-.86.86-.86s.86.38.86.86v6.85c0,.47-.38.86-.86.86s-.86-.38-.86-.86v-2.57h-3.43v2.57c0,.47-.38.86-.86.86s-.86-.38-.86-.86v-6.85c0-.47.38-.86.86-.86Z"/>
+  <rect class="st3" x="7" y="15.81" width="15.84" height="6.88" rx="1.27" ry="1.27"/>
+  <g>
+    <path class="st4" d="M12.44,18.4c-.47-.01-.92-.02-1.36-.03v2.32h-1.11v-2.32c-.44,0-.89.01-1.35.03v-.93h3.82v.93Z"/>
+    <path class="st4" d="M16,19.48l.23-2.02h1.08l-.6,3.23h-1.37l-.3-1.8-.35,1.8h-1.31l-.6-3.23h1.09l.23,1.99.36-1.99h1.19l.35,2.02Z"/>
+    <path class="st4" d="M20.42,17.62c.32.14.55.32.68.56.13.24.19.53.19.88s-.07.62-.22.86c-.15.25-.37.44-.67.57s-.66.2-1.09.2h-.8c-.27,0-.55,0-.83,0,.02-.58.04-1.13.04-1.63s-.01-1.04-.04-1.6c.35-.03.83-.04,1.42-.04.56,0,1,.07,1.32.2ZM19.43,19.81c.28,0,.46-.07.55-.2.09-.13.14-.32.14-.55s-.05-.41-.14-.55-.28-.21-.54-.21c-.29,0-.5,0-.65.03v1.48h.65Z"/>
+  </g>
+</svg>`;
+
+    const sizes = [
+      { size: 16, name: 'icon16.png' },
+      { size: 48, name: 'icon48.png' },
+      { size: 128, name: 'icon128.png' },
+    ];
+
+    async function run() {
+      const blob = new Blob([svgText], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const container = document.getElementById('rows');
+
+      for (const { size, name } of sizes) {
+        const img = new Image();
+        img.src = url;
+        await new Promise(r => { img.onload = r; });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        canvas.style.width = Math.max(size, 80) + 'px';
+        canvas.style.height = Math.max(size, 80) + 'px';
+        canvas.style.imageRendering = 'pixelated';
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, size, size);
+
+        const dataUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = name;
+        a.textContent = `下載 ${name}`;
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = `${size}×${size}`;
+
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.appendChild(canvas);
+        row.appendChild(label);
+        row.appendChild(a);
+        container.appendChild(row);
+      }
+
+      URL.revokeObjectURL(url);
+    }
+
+    run();
+  </script>
+</body>
+</html>

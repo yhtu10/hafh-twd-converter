@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 260px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8f6ff;
+      color: #342D3E;
+    }
+    .header {
+      background: #7149CE;
+      color: white;
+      padding: 16px;
+    }
+    .header h1 { font-size: 15px; font-weight: 700; }
+    .header p { font-size: 11px; color: #c9b8f0; margin-top: 3px; }
+
+    .body { padding: 14px 16px; }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      border: 1.5px solid #e0d8f5;
+    }
+    .toggle-label { font-size: 13px; font-weight: 600; color: #342D3E; }
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #ccc;
+      border-radius: 24px;
+      transition: 0.2s;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    input:checked + .toggle-slider { background: #7149CE; }
+    input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+    .toggle-status {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e8e2f5;
+      margin: 12px 0;
+    }
+
+    .field { margin-bottom: 10px; }
+    label {
+      display: block;
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .rate-row { display: flex; align-items: center; gap: 8px; }
+    input[type="number"] {
+      width: 80px;
+      border: 1.5px solid #d8ccf0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #7149CE;
+      outline: none;
+      background: white;
+    }
+    input[type="number"]:focus { border-color: #7149CE; }
+    .rate-label { font-size: 12px; color: #888; }
+
+    .save-btn {
+      width: 100%;
+      padding: 9px;
+      background: #7149CE;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s;
+    }
+    .save-btn:hover { background: #5e3ab5; }
+
+    .status {
+      text-align: center;
+      font-size: 11px;
+      color: #7149CE;
+      margin-top: 8px;
+      height: 16px;
+    }
+
+    .note {
+      background: #f0ebff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+    .note-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7149CE;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .note-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    .note-label {
+      font-size: 11px;
+      color: #7c6fa0;
+    }
+    .note-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: #342D3E;
+    }
+    .note-sub {
+      font-size: 10px;
+      color: #9c8fc0;
+      margin-top: 6px;
+      line-height: 1.5;
+      border-top: 1px solid #ddd4f5;
+      padding-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>HafH 台幣換算</h1>
+    <p>自動顯示 HafH 幣換算台幣</p>
+  </div>
+  <div class="body">
+    <div class="toggle-row">
+      <span class="toggle-label">顯示換算標籤</span>
+      <label class="toggle">
+        <input type="checkbox" id="enabled" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <p class="toggle-status" id="toggle-status">已開啟</p>
+
+    <hr class="divider">
+
+    <div class="field">
+      <label>換算匯率（1 幣 = ? 台幣）</label>
+      <div class="rate-row">
+        <input type="number" id="rate" min="1" max="100" step="0.1" value="7">
+        <span class="rate-label">台幣 / 幣</span>
+      </div>
+    </div>
+    <button class="save-btn" id="save">儲存設定</button>
+    <div class="status" id="status"></div>
+
+    <div class="note">
+      <div class="note-title">換算參考</div>
+      <div class="note-row">
+        <span class="note-label">月費基準</span>
+        <span class="note-value">1 幣 ≈ 7.05 TWD</span>
+      </div>
+      <div class="note-row">
+        <span class="note-label">建議區間</span>
+        <span class="note-value">5.5 ～ 7 TWD</span>
+      </div>
+      <div class="note-sub">含回饋計劃不定期發放的免費代幣，實際價值因人而異。</div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
